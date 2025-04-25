@@ -2,12 +2,14 @@ const apiBase = "https://recepcao-academia.vercel.app";
 
 let editando = false;
 let alunoEditandoId = null;
+let alunosFiltrados = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
   renderizarFormulario();
   configurarFormulario();
   await carregarAlunos();
   aplicarMascaraCPF();  // Chama a função para aplicar a validação do CPF
+  configurarBusca();
 });
 
 function renderizarFormulario() {
@@ -89,11 +91,10 @@ async function carregarAlunos(filtro = null) {
   const resposta = await fetch(`${apiBase}/alunos`);
   const alunos = await resposta.json();
 
-  let alunosFiltrados = alunos;
+  alunosFiltrados = alunos; // Armazena a lista completa de alunos para filtrar
   if (filtro === "ativo") alunosFiltrados = alunos.filter(a => a.status === true);
   if (filtro === "inativo") alunosFiltrados = alunos.filter(a => a.status === false);
 
-  // Verifica se não há alunos filtrados e exibe uma mensagem
   if (alunosFiltrados.length === 0) {
     const mensagem = document.createElement("p");
     mensagem.className = "text-center text-gray-600 font-semibold";
@@ -165,45 +166,10 @@ function aplicarMascaraCPF() {
   });
 }
 
-let alunosFiltrados = [];
-
-async function carregarAlunos(filtro = null) {
-  const lista = document.getElementById("listaUsuarios");
-  lista.innerHTML = ""; // Limpa a lista antes de adicionar novos itens
-
-  const resposta = await fetch(`${apiBase}/alunos`);
-  const alunos = await resposta.json();
-
-  if (filtro === "ativo") alunosFiltrados = alunos.filter(a => a.status === true);
-  else if (filtro === "inativo") alunosFiltrados = alunos.filter(a => a.status === false);
-  else alunosFiltrados = alunos;
-
-  // Exibe os alunos filtrados ou todos
-  if (alunosFiltrados.length === 0) {
-    const mensagem = document.createElement("p");
-    mensagem.className = "text-center text-gray-600 font-semibold";
-    mensagem.innerText = filtro === "ativo" ? "Não há usuários ativos" : filtro === "inativo" ? "Não há usuários inativos" : "Não há alunos cadastrados";
-    lista.appendChild(mensagem);
-  } else {
-    alunosFiltrados.forEach((aluno) => {
-      const card = document.createElement("div");
-      card.className = "bg-white p-4 rounded-lg shadow border border-gray-200";
-      card.innerHTML = `
-        <p class="text-lg font-semibold text-gray-800"><strong>Nome:</strong> ${aluno.nome}</p>
-        <p class="text-gray-600"><strong>CPF:</strong> ${aluno.cpf}</p>
-        <p class="text-gray-600"><strong>Status:</strong> 
-          <span class="${aluno.status ? 'text-green-600' : 'text-red-600'} font-semibold">
-            ${aluno.status ? "Ativo" : "Inativo"}
-          </span>
-        </p>
-        <div class="mt-3 space-x-2">
-          <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded" onclick="editarUsuario('${aluno.id}')">Editar</button>
-          <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded" onclick="excluirUsuario('${aluno.id}')">Excluir</button>
-        </div>
-      `;
-      lista.appendChild(card);
-    });
-  }
+// Função para configurar a busca ao digitar no campo de pesquisa
+function configurarBusca() {
+  const buscaInput = document.getElementById("buscaAluno");
+  buscaInput.addEventListener("input", filtrarAlunos);
 }
 
 // Função para filtrar alunos pelo nome
@@ -244,4 +210,3 @@ function filtrarAlunos() {
     });
   }
 }
-
