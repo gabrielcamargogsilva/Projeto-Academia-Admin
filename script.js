@@ -82,6 +82,12 @@ function configurarFormulario() {
     botaoCadastrar.innerText = "Cadastrar Aluno";
     botaoCancelar.style.display = "none";
   };
+
+  document.getElementById("nomeAluno").addEventListener("input", function (e) {
+    this.value = this.value.replace(/[0-9]/g, ""); // Remove qualquer número digitado
+  });
+
+  
 }
 
 async function carregarAlunos(filtro = null) {
