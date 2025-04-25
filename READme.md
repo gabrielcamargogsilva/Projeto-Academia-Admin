@@ -60,7 +60,7 @@ Para rodar este projeto em sua máquina local, siga os seguintes passos:
 3. **Abra o arquivo `index.html` no seu navegador para ver o projeto funcionando.**
 
 ## Acesse na Vercel
-**Vercel:** [https://github.com/gabrielcamargogsilva/Projeto-Academia-Admin]( https://github.com/gabrielcamargogsilva/Projeto-Academia-Admin)
+**Vercel:** [https://projeto-academia-admin-liart.vercel.app/]( https://projeto-academia-admin-liart.vercel.app/)
 
 ## Acesse a Tela Cliente (Catraca Virtual)
 **Vercel:** [https://projeto-academia-cliente.vercel.app](https://projeto-academia-cliente.vercel.app)  
